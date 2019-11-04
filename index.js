@@ -7,9 +7,6 @@ const fetch = require('node-fetch')
 const app = express()
 const port = 3000
 const API = 'https://api.github.com/graphql';
-const auth = {headers: {
-  Authorization: 'token cfdaab5329aafbd61a32f4eeab9a208cf05a3c58',
-}};
 
 const q = `
   {
@@ -31,9 +28,9 @@ const q = `
   }
 `;
 
-const client = new GraphQLClient(API, auth);
+  app.use(express.static('html'));
 
-  app.get('/api/add/:repo', (req, res) => {
+  app.put('/api/add/:repo', (req, res) => {
     (async function() {
 
       var r = req.params['repo'];
@@ -51,7 +48,7 @@ const client = new GraphQLClient(API, auth);
           }
         }
       }`;
-      var data = await client.request(body);
+      var data = await ql(body, req);
 
       if (data.createRepository === undefined) {
         res.send("Repository not created!" + JSON.stringify(data));
@@ -68,14 +65,14 @@ const client = new GraphQLClient(API, auth);
         }
       }`;
 
-      client.request(body).then(unused => {
+      ql(body, req).then(unused => {
         res.send(JSON.stringify(data));
       });
     }()).catch(error => res.send("Unexpected err: " + error));
   });
 
   app.get('/api/clone', (req, res) => {
-    client.request(q).then(data => {
+    ql(q, req).then(data => {
       //data.viewer.repositories.nodes
       var r = '';
       var nodes = _.filter(data.viewer.repositories.nodes, n => n.repositoryTopics.nodes.length > 0);
@@ -88,7 +85,7 @@ const client = new GraphQLClient(API, auth);
   })
 
   app.get('/clone', (req, res) => {
-    client.request(q).then(data => {
+    ql(q, req).then(data => {
       //data.viewer.repositories.nodes
       var r = '<body onload="var x = document.getElementById(\'txt\');x.focus();x.select();"><textarea id="txt" style="width:100%;height:100%">';
       var nodes = _.filter(data.viewer.repositories.nodes, n => n.repositoryTopics.nodes.length > 0);
@@ -101,4 +98,18 @@ const client = new GraphQLClient(API, auth);
     });
   })
 
+  async function ql(query, req) {
+    const auth = {headers: {
+      Authorization: `token ${req.header['authToken']}`
+    }};
+    const client = new GraphQLClient(API, auth);
+    return client.request(query);
+  }
+
+  app.use(function (err, req, res, next) {
+    console.error(err.stack)
+    res.status(500).send('Something broke! ' + err.stack)
+  })
+  
   app.listen(port, () => console.log(`Listening on port ${port}!`))
+  

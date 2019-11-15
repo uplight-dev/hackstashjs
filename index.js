@@ -28,8 +28,6 @@ const q = `
   }
 `;
 
-  app.use(express.static('html'));
-
   app.put('/api/add/:repo', (req, res) => {
     (async function() {
 
@@ -71,14 +69,21 @@ const q = `
     }()).catch(error => res.send("Unexpected err: " + error));
   });
 
+  app.get('/api/repos', (req, res) => {
+    var r = [];
+    eachRepo((n) => {
+      r.push({name: n.name, url: n.sshUrl });
+    }, req).then(() => {
+      res.header('Content-Type','application/json');
+      res.send(JSON.stringify(r));
+    });
+  });
+
   app.get('/api/clone', (req, res) => {
-    ql(q, req).then(data => {
-      //data.viewer.repositories.nodes
-      var r = '';
-      var nodes = _.filter(data.viewer.repositories.nodes, n => n.repositoryTopics.nodes.length > 0);
-      _.forEach(nodes, n => {
-        r += `git clone ${n.sshUrl}\n`;
-      })
+    var r = '';
+    eachRepo((n) => {
+      r += `git clone ${n.sshUrl}\n`;
+    }, req).then(() => {
       res.header('Content-Type','text/plain');
       res.send(r);
     });
@@ -98,11 +103,22 @@ const q = `
     });
   })
 
+  function eachRepo(cb, req) {
+    return ql(q, req).then(data => {
+      //data.viewer.repositories.nodes
+      var nodes = _.filter(data.viewer.repositories.nodes, n => n.repositoryTopics.nodes.length > 0);
+      _.forEach(nodes, n => {
+        cb(n);
+      })
+    });
+  }
+
   async function ql(query, req) {
     const auth = {headers: {
-      Authorization: `token ${req.header['authToken']}`
+      Authorization: `token ${req.query.authToken}`
     }};
     const client = new GraphQLClient(API, auth);
+    console.log("Auth: "+ req.query.authToken)
     return client.request(query);
   }
 
@@ -111,5 +127,15 @@ const q = `
     res.status(500).send('Something broke! ' + err.stack)
   })
   
+  if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('client/build'));
+  
+    const path = require('path');
+    app.get('*', (req,res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+    })
+  
+  }
+
   app.listen(port, () => console.log(`Listening on port ${port}!`))
   

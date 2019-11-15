@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "clean": "rimraf node_modules",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "client": "npm run start --prefix client",
+    "server": "nodemon -r esm index.js",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "start": "node -r esm index.js"
   },
   "author": "Dan Leahu",
   "license": "ISC",
@@ -16,5 +19,9 @@
     "lodash": "4.17.15",
     "node-fetch": "^2.6.0",
     "rimraf": "3.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.1",
+    "nodemon": "^1.19.1"
   }
 }

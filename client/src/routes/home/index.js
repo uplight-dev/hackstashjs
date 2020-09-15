@@ -15,7 +15,7 @@ export default class Home extends Component {
 						<div class=" mdc-typography--caption">Welcome to home route</div>
 					</div>
 					<div class={style.cardBody}>
-						wew
+						
 					</div>
 					<Card.Actions>
 						<Card.ActionButton>OKAY</Card.ActionButton>

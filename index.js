@@ -106,10 +106,15 @@ const q = `
   function eachRepo(cb, req) {
     return ql(q, req).then(data => {
       //data.viewer.repositories.nodes
-      var nodes = _.filter(data.viewer.repositories.nodes, n => n.repositoryTopics.nodes.length > 0);
-      _.forEach(nodes, n => {
+      console.log('repo: ' + JSON.stringify(data.viewer.repositories.nodes));
+      // var nodes = _.filter(data.viewer.repositories.nodes, n => n.repositoryTopics.nodes.length > 0);
+      //   _.forEach(nodes, n => {
+      //     cb(n);
+      //   })
+      // });
+      _.forEach(data.viewer.repositories.nodes, n => {
         cb(n);
-      })
+      });
     });
   }
 

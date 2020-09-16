@@ -13,6 +13,7 @@
   "author": "Dan Leahu",
   "license": "ISC",
   "dependencies": {
+    "client": "file:client",
     "esm": "3.2.25",
     "express": "4.17.1",
     "graphql-request": "1.8.2",

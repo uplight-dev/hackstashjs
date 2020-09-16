@@ -22,12 +22,8 @@ export default class App extends Component {
 	render() {
 		return (
 			<div id="app">
-				<Header selectedRoute={this.state.currentUrl} />
 				<Router onChange={this.handleRoute}>
 					<Home path="/" />
-					<Profile path="/profile/" user="me" />
-					<Profile path="/profile/:user" />
-					<NotFound default />
 				</Router>
 			</div>
 		);

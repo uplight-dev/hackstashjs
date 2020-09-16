@@ -7,7 +7,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { AgGridColumn } from 'ag-grid-react/lib/agGridColumn';
 import useState from 'react';
 
-function Home() {
+const Home = () => {
 
 	const [rowData, setRowData] = useState([
 		{make: "Toyota", model: "Celica", price: 35000},

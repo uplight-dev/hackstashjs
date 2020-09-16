@@ -29,10 +29,12 @@
     "preact-cli": "^2.0.0"
   },
   "dependencies": {
+    "ag-grid-community": "^24.0.0",
+    "ag-grid-react": "^24.0.0",
     "preact": "^8.5.2",
     "preact-compat": "^3.17.0",
+    "preact-material-components": "^1.4.3",
     "preact-render-to-string": "^4.1.0",
-    "preact-router": "^2.5.5",
-    "preact-material-components": "^1.4.3"
+    "preact-router": "^2.5.5"
   }
 }

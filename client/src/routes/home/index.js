@@ -1,30 +1,54 @@
-import { h, Component } from 'preact';
-import Card from 'preact-material-components/Card';
-import 'preact-material-components/Card/style.css';
-import 'preact-material-components/Button/style.css';
-import style from './style';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { AgGridReact } from 'ag-grid-react';
 import { AgGridColumn } from 'ag-grid-react/lib/agGridColumn';
-import useState from 'react';
+import { Component } from 'preact';
+import 'preact-material-components/Button/style.css';
+import 'preact-material-components/Card/style.css';
+import { connect } from 'react-redux';
+import { fetchApps } from '../../redux/actions/appsActions';
+import LabelCellEditor from '../../components/LabelCellEditor';
+import style from './style';
 
-const Home = () => {
+@connect((store) => {
+	return {
+		apps: store,
+	};
+})
+export default class Home extends Component {
+	constructor(props) {
+		super();
+		this.props = props;
+		console.log(this.props);
+		this.props.dispatch(fetchApps());
+		this.rowData = [{ name: "Toyota", url: "Celica", labels: "abc,def" }];
 
-	const [rowData, setRowData] = useState([
-		{make: "Toyota", model: "Celica", price: 35000},
-		{make: "Ford", model: "Mondeo", price: 32000},
-		{make: "Porsche", model: "Boxter", price: 72000}
-	]);
+		this.frameworkCmp = {
+			labelCellRenderer: LabelCellEditor
+		}
+	}
 
-	return (
-		<div>
-		<AgGridReact
-			rowData={rowData}>
-			<AgGridColumn field="make"></AgGridColumn>
-			<AgGridColumn field="model"></AgGridColumn>
-			<AgGridColumn field="price"></AgGridColumn>
-		</AgGridReact>
-		</div>
-	);
+	onGridReady(params) {
+		this.gridApi = params.api;
+		this.gridColumnApi = params.columnApi;
+		this.gridApi.sizeColumnsToFit();
+	}
+
+	render() {
+		return (
+			<div className="ag-theme-alpine" style="height:100%">
+
+				<AgGridReact
+					frameworkComponents={this.frameworkCmp}
+					rowData={this.rowData}
+					onGridReady={this.onGridReady}
+				>
+					<AgGridColumn headerName="Name" field="name"></AgGridColumn>
+					<AgGridColumn headerName="Repo URL" field="url"></AgGridColumn>
+					<AgGridColumn headerName="Labels" field="labels" autoHeight={true} editable={true} cellClass={style.myAgCell}
+						cellEditorFramework={LabelCellEditor}></AgGridColumn>
+				</AgGridReact>
+
+			</div>);
+	}
 }
-
-export default Home;

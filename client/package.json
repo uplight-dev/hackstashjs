@@ -26,7 +26,7 @@
     "eslint": "^4.5.0",
     "eslint-config-synacor": "^1.1.0",
     "if-env": "^1.0.0",
-    "preact-cli": "^3.0.1"
+    "preact-cli": "^3.0.2"
   },
   "dependencies": {
     "ag-grid-community": "^24.0.0",
@@ -35,6 +35,12 @@
     "preact-compat": "^3.19.0",
     "preact-material-components": "^1.6.1",
     "preact-render-to-string": "^5.1.10",
-    "preact-router": "^3.2.1"
+    "preact-router": "^3.2.1",
+    "react-redux": "^7.2.1",
+    "react-select": "^3.1.0",
+    "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
+    "redux-promise-middleware": "^6.1.2",
+    "redux-thunk": "^2.3.0"
   }
 }

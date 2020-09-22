@@ -1,12 +1,10 @@
 import { h, Component } from 'preact';
 import { Router } from 'preact-router';
+import { Provider } from 'react-redux';
 
-import Header from './header';
-import Home from '../routes/home';
-import Profile from '../routes/profile';
-import NotFound from '../routes/404';
-// import Home from 'async!../routes/home';
-// import Profile from 'async!../routes/profile';
+import Home from './routes/home';
+
+import store from './redux/store';
 
 export default class App extends Component {
 	/** Gets fired when the route changes.
@@ -21,11 +19,13 @@ export default class App extends Component {
 
 	render() {
 		return (
-			<div id="app">
-				<Router onChange={this.handleRoute}>
-					<Home path="/" />
-				</Router>
-			</div>
+			<Provider store={store}>
+				<div id="app">
+					<Router onChange={this.handleRoute}>
+						<Home path="/" />
+					</Router>
+				</div>
+			</Provider>
 		);
 	}
 }

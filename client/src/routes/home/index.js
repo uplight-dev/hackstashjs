@@ -1,27 +1,54 @@
-import { h, Component } from 'preact';
-import Card from 'preact-material-components/Card';
-import 'preact-material-components/Card/style.css';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import { AgGridReact } from 'ag-grid-react';
+import { AgGridColumn } from 'ag-grid-react/lib/agGridColumn';
+import { Component } from 'preact';
 import 'preact-material-components/Button/style.css';
+import 'preact-material-components/Card/style.css';
+import { connect } from 'react-redux';
+import { fetchApps } from '../../redux/actions/appsActions';
+import LabelCellEditor from '../../components/LabelCellEditor';
 import style from './style';
 
+@connect((store) => {
+	return {
+		apps: store,
+	};
+})
 export default class Home extends Component {
+	constructor(props) {
+		super();
+		this.props = props;
+		console.log(this.props);
+		this.props.dispatch(fetchApps());
+		this.rowData = [{ name: "Toyota", url: "Celica", labels: "abc,def" }];
+
+		this.frameworkCmp = {
+			labelCellRenderer: LabelCellEditor
+		}
+	}
+
+	onGridReady(params) {
+		this.gridApi = params.api;
+		this.gridColumnApi = params.columnApi;
+		this.gridApi.sizeColumnsToFit();
+	}
+
 	render() {
 		return (
-			<div class={`${style.home} page`}>
-				<h1>Home route</h1>
-				<Card>
-					<div class={style.cardHeader}>
-						<h2 class=" mdc-typography--title">Home card</h2>
-						<div class=" mdc-typography--caption">Welcome to home route</div>
-					</div>
-					<div class={style.cardBody}>
-						wew
-					</div>
-					<Card.Actions>
-						<Card.ActionButton>OKAY</Card.ActionButton>
-					</Card.Actions>
-				</Card>
-			</div>
-		);
+			<div className="ag-theme-alpine" style="height:100%">
+
+				<AgGridReact
+					frameworkComponents={this.frameworkCmp}
+					rowData={this.rowData}
+					onGridReady={this.onGridReady}
+				>
+					<AgGridColumn headerName="Name" field="name"></AgGridColumn>
+					<AgGridColumn headerName="Repo URL" field="url"></AgGridColumn>
+					<AgGridColumn headerName="Labels" field="labels" autoHeight={true} editable={true} cellClass={style.myAgCell}
+						cellEditorFramework={LabelCellEditor}></AgGridColumn>
+				</AgGridReact>
+
+			</div>);
 	}
 }

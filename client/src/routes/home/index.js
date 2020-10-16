@@ -6,7 +6,7 @@ import { Component } from 'preact';
 import 'preact-material-components/Button/style.css';
 import 'preact-material-components/Card/style.css';
 import { connect } from 'react-redux';
-import { fetchApps } from '../../redux/actions/appsActions';
+import { APPS_FETCH_REQUESTED } from '../../redux/actions/appsActions';
 import LabelCellEditor from '../../components/LabelCellEditor';
 import style from './style';
 
@@ -20,7 +20,7 @@ export default class Home extends Component {
 		super();
 		this.props = props;
 		console.log(this.props);
-		this.props.dispatch(fetchApps());
+		this.props.dispatch({type: APPS_FETCH_REQUESTED});
 		this.rowData = [{ name: "Toyota", url: "Celica", labels: "abc,def" }];
 
 		this.frameworkCmp = {

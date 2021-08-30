@@ -11,3 +11,7 @@
 .cardBody {
   padding: 16px;
 }
+
+.myAgCell {
+	overflow:visible !important;
+}

@@ -15,7 +15,7 @@
   "dependencies": {
     "client": "file:client",
     "esm": "3.2.25",
-    "express": "4.17.1",
+    "express": "4.18.2",
     "graphql-request": "1.8.2",
     "lodash": "4.17.15",
     "node-fetch": "^2.6.0",
